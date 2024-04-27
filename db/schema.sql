@@ -21,12 +21,12 @@ CREATE TABLE role (
 );
 
 -- Create an 'employee' table
-CREATE TABLE employee (
+CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INTEGER NOT NULL,
     FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
     manager_id INTEGER,
-    FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
+    FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
 );
