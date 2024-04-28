@@ -24,7 +24,7 @@ ON employees.manager_id=manager.id;
         console.error(err);
     } else{
         console.log('\n');
-        console.log('Viewing Slave Data ......');
+        console.log('Viewing Corp Data ......');
         console.table(result.rows);
         init();
     }
