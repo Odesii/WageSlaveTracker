@@ -1,13 +1,14 @@
 import pool from "./databaseConfig.js";
+import inquirer from "inquirer";
 import { init } from "./menu.js";
 
 
 function viewEmp(){
     pool.query(`SELECT
-employees.id, employees.last_name, 
-employees.first_name,  
+employees.id, employees.first_name, 
+employees.last_name,  
 role.title, 
-department.name,
+department.name AS department,
 role.salary,
 CONCAT (employees.first_name,' ',employees.last_name) 
 AS employee_name, 
@@ -31,6 +32,90 @@ ON employees.manager_id=manager.id;
 })
 };
 
+function viewEmpDep(){
+    pool.query(`SELECT id, name FROM department`,(err, res) => {
+        if(err){
+            console.error(err)
+        }
+        let department = res.rows.map(dep => ({
+            name: dep.name,
+            value: dep.id
+        }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name:'depName',
+                message:'CHOOSE DEPARTMENT',
+                choices: department
+            }
+        ]).then((answers) =>{
+            pool.query (`SELECT
+            employees.id, employees.last_name, 
+            employees.first_name,  
+            role.title, 
+            department.name AS department,
+            role.salary,
+            CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name, 
+            CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name
+            FROM department
+            JOIN role ON department.id = role.department_id
+            JOIN employees ON role.id = employees.role_id
+            LEFT JOIN employees manager ON employees.manager_id = manager.id
+            WHERE department.id = $1;`, [answers.depName], (err, res) =>{
+                if(err){
+                    console.error(err)
+                }
+                console.log(`\nVIEWING EMPLOYEE DATA FOR DEPARTMENT: ${answers.depName}`);
+                console.table(res.rows);
+                init();
+            })
+        })
+    })
+}
+
+function viewByManage(){
+    pool.query(`SELECT id, first_name, last_name FROM employees WHERE manager_id IS NULL`,(err, res) => {
+        if(err){
+            console.error(err)
+        }
+        let managers = res.rows.map(manager => ({
+            name: `${manager.first_name} ${manager.last_name}`,
+            value: manager.id
+        }));
+
+        const questions = [
+            {
+                type: 'list',
+                name:'mgrName',
+                message:'CHOOSE MANAGER',
+                choices: managers
+            }
+        ]
+    inquirer.prompt(questions).then((answers) =>{
+        pool.query(`SELECT
+        employees.id, employees.last_name, 
+        employees.first_name,  
+        role.title, 
+        department.name AS department,
+        role.salary,
+        CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name, 
+        CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name
+        FROM employees
+        JOIN role ON employees.role_id = role.id
+        JOIN department ON role.department_id = department.id
+        JOIN employees manager ON employees.manager_id = manager.id
+        WHERE employees.manager_id = $1;`, [answers.mgrName], (err, res) =>{
+            if(err){
+                console.error(err)
+            }
+            console.log(`\n VIEWING EMPLOYEES MANAGED BY: ${answers.mgrName} `)
+            console.table(res.rows)
+            init();
+        });
+    });
+});
+};
 function addEmp(){
     pool.query(`SELECT id,
     CONCAT ( employees.first_name,' ',employees.last_name) 
@@ -51,6 +136,8 @@ function addEmp(){
                 value: row.id
             }));
 
+            manager.push({name: 'NONE',value:null})
+            
             const questions = [
 
                 {
@@ -78,12 +165,11 @@ function addEmp(){
                     choices: manager
                 },
             ];
-
             inquirer.prompt(questions).then((answers) =>{ 
                 pool.query
                 (`INSERT INTO employees
                 (first_name, last_name, role_id, manager_id) 
-                VALUES ($1, $2, $3, $4) RETURNING *`, 
+                VALUES ($1, $2, $3, $4)`, 
                 [answers.firstName, answers.lastName, answers.role, answers.manager])
                 .then((res) => {
                     console.log('EMPLOYEE ADDED SUCCESSFULLY:', res.rows[0])
@@ -92,11 +178,11 @@ function addEmp(){
                 .catch((err) => {
                     console.error('Error adding employee:', err)
                 });  
-
             });
         });
     });
 };
+
 
 function viewRole(){
 
@@ -242,6 +328,8 @@ function quit(){
 
 export {
     viewEmp,
+    viewEmpDep,
+    viewByManage,
     addEmp,
     updateRole,
     viewRole,

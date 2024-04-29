@@ -1,13 +1,16 @@
 import inquirer from "inquirer"
 import {    
     viewEmp,
+    viewEmpDep,
+    viewByManage,
     addEmp,
     viewRole,
     updateRole,
     addRole,
     viewDep,
     addDep,
-    quit} from "./query.js"
+    quit,
+    } from "./query.js"
 
 function displayMenu() {
     const questions = [
@@ -17,6 +20,8 @@ function displayMenu() {
             message: 'Hello User what is your query?',
             choices: [
                 'VIEW ALL EMPLOYEES',
+                'VIEW EMPLOYEES BY DEPARTMENT',
+                `VIEW EMPLOYEES BY MANAGER`,
                 'ADD EMPLOYEE',
                 'VIEW ALL ROLES',
                 'UPDATE ROLES',
@@ -38,6 +43,14 @@ function handleMenu (selection){
             viewEmp();
             break;
         
+        case 'VIEW EMPLOYEES BY DEPARTMENT':
+            viewEmpDep();
+            break;
+
+        case 'VIEW EMPLOYEES BY MANAGER':
+            viewByManage();
+            break;
+
         case 'ADD EMPLOYEE':
             addEmp();
             break;
