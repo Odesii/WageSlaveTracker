@@ -1,8 +1,9 @@
 import pool from "./databaseConfig.js";
 import inquirer from "inquirer";
 import { init } from "./menu.js";
+import chalk from "chalk";
 
-
+// a query to display a table of all employees
 function viewEmp(){
     pool.query(`SELECT
 employees.id, employees.first_name, 
@@ -25,13 +26,14 @@ ON employees.manager_id=manager.id;
         console.error(err);
     } else{
         console.log('\n');
-        console.log('Viewing Corp Data ......');
+        console.log(chalk.white.bgRed.bold('Viewing Corp Data ......'));
         console.table(result.rows);
         init();
     }
 })
 };
 
+// a query to display employees by department 
 function viewEmpDep(){
     pool.query(`SELECT id, name FROM department`,(err, res) => {
         if(err){
@@ -66,7 +68,7 @@ function viewEmpDep(){
                 if(err){
                     console.error(err)
                 }
-                console.log(`\nVIEWING EMPLOYEE DATA FOR DEPARTMENT: ${answers.depName}`);
+                console.log(chalk.white.bgRed.bold(`\nVIEWING EMPLOYEE DATA FOR DEPARTMENT: ${answers.depName}`));
                 console.table(res.rows);
                 init();
             })
@@ -74,6 +76,7 @@ function viewEmpDep(){
     })
 }
 
+// a query to display employees by manager
 function viewByManage(){
     pool.query(`SELECT id, first_name, last_name FROM employees WHERE manager_id IS NULL`,(err, res) => {
         if(err){
@@ -109,13 +112,15 @@ function viewByManage(){
             if(err){
                 console.error(err)
             }
-            console.log(`\n VIEWING EMPLOYEES MANAGED BY: ${answers.mgrName} `)
+            console.log(chalk.white.bgRed.bold(`\n VIEWING EMPLOYEES MANAGED BY: ${answers.mgrName} `))
             console.table(res.rows)
             init();
         });
     });
 });
 };
+
+// a query to add a new employee
 function addEmp(){
     pool.query(`SELECT id,
     CONCAT ( employees.first_name,' ',employees.last_name) 
@@ -172,7 +177,7 @@ function addEmp(){
                 VALUES ($1, $2, $3, $4)`, 
                 [answers.firstName, answers.lastName, answers.role, answers.manager])
                 .then((res) => {
-                    console.log('EMPLOYEE ADDED SUCCESSFULLY:', res.rows[0])
+                    console.log(chalk.white.bgRed.bold('EMPLOYEE ADDED SUCCESSFULLY:'), res.rows[0])
                     init();
                 })
                 .catch((err) => {
@@ -183,9 +188,8 @@ function addEmp(){
     });
 };
 
-
+// a query to view all current roles
 function viewRole(){
-
     pool.query
     (`SELECT role.id, 
     role.title, 
@@ -196,14 +200,14 @@ function viewRole(){
         if(err){
             console.error(err);
         } else{
-            console.log('VIEWING ROLES......')
+            console.log(chalk.white.bgRed.bold('VIEWING ROLES......'))
             console.table(result.rows);
             init();
         };
     });
 
 };
-
+// a query to change an employees role
 function updateRole(){
     pool.query(`SELECT id,
     CONCAT (employees.last_name,' ',employees.first_name) 
@@ -243,7 +247,7 @@ function updateRole(){
                 pool.query(`UPDATE employees SET role_id = $1 WHERE id = $2`,
             [answers.newRole, answers.employee])
             .then((res) => {
-                console.log('ROLES UPDATED')
+                console.log(chalk.white.bgRed.bold('ROLES UPDATED'))
                 init();
             });
             });
@@ -251,6 +255,8 @@ function updateRole(){
     });
 };
 
+
+// a query to add a new role
 function addRole(){
 pool.query(`SELECT id, name FROM department`, 
 (err, res) => {
@@ -286,25 +292,27 @@ pool.query(`SELECT id, name FROM department`,
         pool.query(`INSERT INTO role (title, salary, department_id) 
         VALUES ($1, $2, $3)`,
         [answers.role, answers.salary, answers.department]).then(
-            console.log('UPDATING'),
+            console.log(chalk.white.bgRed.bold('UPDATING')),
             init()
         );
     })
 })
 };
 
+// a query to display all departments
 function viewDep(){
     pool.query(`SELECT * FROM department`, (err, result) =>{
         if(err){
             console.error(err);
         } else{
-            console.log('DEPARTMENT LIST.....')
+            console.log(chalk.white.bgRed.bold('DEPARTMENT LIST.....'))
             console.table(result.rows);
             init();
         }
     });
 };
 
+// a query to add a new department.
 function addDep(){
 const question = [
     {
@@ -316,12 +324,14 @@ const question = [
 inquirer.prompt(question).then((answers) => {
     pool.query(`INSERT INTO department(name)
         VALUES($1)`, [answers.newDep])
+        console.log(chalk.yellow.bgRed(`DEPARTMENT ADDED`))
         init();
 })
 };
 
+
 function quit(){
-    console.log('EXITING.......')
+    console.log(chalk.green('EXITING.......'))
 }
 
 

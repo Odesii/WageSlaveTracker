@@ -1,10 +1,9 @@
-// Inside databaseConfig.js
 
 import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+// sets the default log in for env
 const { Pool } = pg;
 export const pool = new Pool({
     user: process.env.DB_USER,

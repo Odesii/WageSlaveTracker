@@ -11,7 +11,7 @@ import {
     addDep,
     quit,
     } from "./query.js"
-
+//  sets the amin menu options 
 function displayMenu() {
     const questions = [
         {
@@ -36,7 +36,7 @@ function displayMenu() {
     return inquirer.prompt(questions);
 }
 
-
+//  a switch case to handle the main menu options and start query functions
 function handleMenu (selection){
     switch (selection.menuOptions) {
         case 'VIEW ALL EMPLOYEES':
@@ -84,7 +84,7 @@ function handleMenu (selection){
     }
 }
 
-
+//passes the main choice over to the switch case
 function init() {
     displayMenu().then(handleMenu);
 }

@@ -1,11 +1,11 @@
-
+import chalk from "chalk";
 import { init } from "./util/menu.js";
 
 
 
 
 function hello(){
-    console.log('Initializing application...', `
+    console.log(chalk.black.bgGreenBright('Initializing application...'), chalk.red(`
        !:                                  :!      
        P^                                  ^5      
       Y#.                                  :&J     
@@ -43,7 +43,7 @@ function hello(){
                 ~5&@@@@@P  G@@@@@&5~               
                   :7P&@@5  P@@&P7.                 
                      :7GJ  YP7:                    
- `
+ `)
  );
  }
  
