@@ -41,7 +41,8 @@ Just think, with every command you're one step closer to automating your own obs
 `node app`
 
 Follow the onscreen prompts to navigate through the bureaucratic labyrinth that is your company's structure.
-
+### ScreenShot
+![Screenshot](https://imgur.com/bvOhCje.png)
 ### LiveLink
 Watch a demo and learn nothing new here:**[-----Video Link-----](https://www.youtube.com/watch?v=KEr8ydOk7K4&feature=youtu.be)**
 
