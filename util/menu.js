@@ -10,6 +10,9 @@ import {
     viewDep,
     addDep,
     quit,
+    deleteEmp,
+    deleteDep,
+    viewDepBudget
     } from "./query.js"
 //  sets the amin menu options 
 function displayMenu() {
@@ -27,7 +30,11 @@ function displayMenu() {
                 'UPDATE ROLES',
                 'ADD ROLE',
                 'VIEW ALL DEPARTMENTS',
+                'VIEW DEPARTMENT BUDGET',
                 'ADD DEPARTMENTS', 
+                'TERMINATE DEPARTMENT',
+                'TERMINATE EMPLOYEE',
+
                 'QUIT'
             ]
         }
@@ -75,6 +82,18 @@ function handleMenu (selection){
             addDep();
             break;
         
+        case 'TERMINATE DEPARTMENT':
+            deleteDep();
+            break;
+
+        case 'TERMINATE EMPLOYEE':
+            deleteEmp();
+        break;
+
+        case 'VIEW DEPARTMENT BUDGET':
+            viewDepBudget();
+            break;
+            
         case 'QUIT':
             quit();
         break;
