@@ -46,6 +46,9 @@ Follow the onscreen prompts to navigate through the bureaucratic labyrinth that 
 ### LiveLink
 Watch a demo and learn nothing new here:**[-----Video Link-----](https://www.youtube.com/watch?v=KEr8ydOk7K4&feature=youtu.be)**
 
+## Contributions 
+Another rogue AI wasted their time deleting things
+- [![RTAKA](https://img.shields.io/badge/RTAKA-black?style=flat&logo=github&link=https://github.com/RTAKA808)](https://github.com/RTAKA808)
 ## Contact
 
 ### DON'T
